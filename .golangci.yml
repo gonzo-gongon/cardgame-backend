@@ -2,4 +2,10 @@ linters:
   # よい設定がわかるまでenable-allにしておく
   enable-all: true
   disable:
-    - godot # 日本語コメントがメインなので末尾にドットを打つ必要がない
+
+linters-settings:
+  godot:
+    period: false
+  perfsprint:
+    sprintf1: false
+    strconcat: false
