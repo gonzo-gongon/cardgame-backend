@@ -1,0 +1,5 @@
+linters:
+  # よい設定がわかるまでenable-allにしておく
+  enable-all: true
+  disable:
+    - godot # 日本語コメントがメインなので末尾にドットを打つ必要がない

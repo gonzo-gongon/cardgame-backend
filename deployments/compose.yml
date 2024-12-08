@@ -1,0 +1,15 @@
+services:
+  backend:
+    image: golang:1.23
+    depends_on:
+      - database
+    volumes:
+      - ../:/usr/local/go/src/backend
+      # - golangci-lint:/go/bin/golangci-lint
+    working_dir: /usr/local/go/src/backend
+    tty: true
+    command: |
+      go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+volumes:
+  # golangci-lint:
