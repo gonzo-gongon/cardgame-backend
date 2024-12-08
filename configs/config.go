@@ -18,6 +18,7 @@ func (e *GetConfigError) Error() string {
 
 type Config struct {
 	MySQL MySQLConfig
+	JWT   JWTConfig
 }
 
 func loadEnv() {
@@ -26,7 +27,7 @@ func loadEnv() {
 		panic(err)
 	}
 
-	filepath := path.Join(dir, "../deployments/.env")
+	filepath := path.Join(dir, "deployments/.env")
 
 	if err := godotenv.Load(filepath); err != nil {
 		panic(err)
@@ -49,5 +50,6 @@ func NewConfigs() (*Config, error) {
 
 	return &Config{
 		MySQL: newMySQLConfig(),
+		JWT:   newJWTConfig(),
 	}, nil
 }

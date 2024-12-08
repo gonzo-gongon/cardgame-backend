@@ -15,6 +15,13 @@ func main() { //nolint:unused
 
 	r := gin.Default()
 
+	if err := container.Invoke(func(c *controller.AuthenticationController) {
+		r.POST("/signup", c.SignUp)
+		r.POST("/refresh", c.Refresh)
+	}); err != nil {
+		panic(err)
+	}
+
 	if err := container.Invoke(func(c *controller.UserController) {
 		r.GET("/user", c.GetOne)
 	}); err != nil {

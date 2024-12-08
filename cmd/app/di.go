@@ -31,21 +31,41 @@ func BuildContainer() *dig.Container {
 	}
 
 	// Gateway
+	if err := container.Provide(gateway.NewAuthenticationGateway); err != nil {
+		panic(err)
+	}
+
 	if err := container.Provide(gateway.NewDatabaseGateway); err != nil {
 		panic(err)
 	}
 
 	// Repository
+	if err := container.Provide(repository.NewAuthenticationRepository); err != nil {
+		panic(err)
+	}
+
 	if err := container.Provide(repository.NewUserRepository); err != nil {
 		panic(err)
 	}
 
+	if err := container.Provide(repository.NewUserSessionRepository); err != nil {
+		panic(err)
+	}
+
 	// Usecase
+	if err := container.Provide(usecase.NewAuthenticationUsecase); err != nil {
+		panic(err)
+	}
+
 	if err := container.Provide(usecase.NewUserUsecase); err != nil {
 		panic(err)
 	}
 
 	// Controller
+	if err := container.Provide(controller.NewAuthenticationController); err != nil {
+		panic(err)
+	}
+
 	if err := container.Provide(controller.NewUserController); err != nil {
 		panic(err)
 	}
