@@ -8,7 +8,7 @@ import (
 
 type AuthenticationUsecase struct {
 	authenticationRepository *repository.AuthenticationRepository
-	userRepository           *repository.UserRepository
+	userRepository           repository.IUserRepository
 	userSessionRepository    *repository.UserSessionRepository
 }
 
@@ -58,7 +58,7 @@ func (u *AuthenticationUsecase) Refresh(token string) (string, error) {
 	}
 
 	if updatedAt.Compare(*issuedAt) != 0 {
-		fmt.Printf("t1: %o t2: %o\n", issuedAt, updatedAt)
+		fmt.Printf("t1: %s t2: %s\n", issuedAt, updatedAt)
 		return "", fmt.Errorf("this is not the latest token")
 	}
 
@@ -96,7 +96,7 @@ func (u *AuthenticationUsecase) GetUser(token string) (*model.User, error) {
 
 func NewAuthenticationUsecase(
 	authenticationRepository *repository.AuthenticationRepository,
-	userRepository *repository.UserRepository,
+	userRepository repository.IUserRepository,
 	userSessionRepository *repository.UserSessionRepository,
 ) (*AuthenticationUsecase, error) {
 	return &AuthenticationUsecase{

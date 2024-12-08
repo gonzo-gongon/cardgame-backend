@@ -7,6 +7,11 @@ import (
 	"original-card-game-backend/internal/infrastructure/value"
 )
 
+type IUserRepository interface {
+	GetByUserID(userID string) (*model.User, error)
+	Create(createUser *CreateUser) (*model.User, error)
+}
+
 type UserRepository struct {
 	databaseGateway *gateway.DatabaseGateway
 }
@@ -61,7 +66,7 @@ func (r *UserRepository) Create(createUser *CreateUser) (*model.User, error) {
 
 func NewUserRepository(
 	databaseGateway *gateway.DatabaseGateway,
-) (*UserRepository, error) {
+) (IUserRepository, error) {
 	return &UserRepository{
 		databaseGateway: databaseGateway,
 	}, nil

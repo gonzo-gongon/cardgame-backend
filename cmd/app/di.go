@@ -13,18 +13,6 @@ import (
 func BuildContainer() *dig.Container {
 	container := dig.New()
 
-	// if err := container.Provide(func() *configs.Config {
-	// 	return configs.NewConfigs()
-	// }); err != nil {
-	// 	panic(err)
-	// }
-
-	// if err := container.Provide(func(cfg *configs.Config) (*gateway.DatabaseGateway, error) {
-	// 	return gateway.NewDatabaseGateway(cfg)
-	// }); err != nil {
-	// 	panic(err)
-	// }
-
 	// Config
 	if err := container.Provide(configs.NewConfigs); err != nil {
 		panic(err)

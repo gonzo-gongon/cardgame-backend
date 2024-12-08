@@ -6,7 +6,7 @@ import (
 )
 
 type UserUsecase struct {
-	userRepository *repository.UserRepository
+	userRepository repository.IUserRepository
 }
 
 func (u *UserUsecase) GetUser(userID string) (*model.User, error) {
@@ -19,7 +19,7 @@ func (u *UserUsecase) GetUser(userID string) (*model.User, error) {
 }
 
 func NewUserUsecase(
-	userRepository *repository.UserRepository,
+	userRepository repository.IUserRepository,
 ) (*UserUsecase, error) {
 	return &UserUsecase{
 		userRepository: userRepository,
