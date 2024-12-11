@@ -23,7 +23,6 @@ func TestUserUsecase_GetByUserID_正常系(t *testing.T) {
 	container := dig.New()
 	assert.NoError(t, container.Provide(func() *gomock.Controller {
 		c := gomock.NewController(t)
-		defer c.Finish()
 
 		return c
 	}))
@@ -49,7 +48,6 @@ func TestUserUsecase_GetByUserID_正常系_対象なし(t *testing.T) {
 	container := dig.New()
 	assert.NoError(t, container.Provide(func() *gomock.Controller {
 		c := gomock.NewController(t)
-		defer c.Finish()
 
 		return c
 	}))
@@ -76,7 +74,6 @@ func TestUserUsecase_GetByUserID_異常系_エラーあり(t *testing.T) {
 	container := dig.New()
 	assert.NoError(t, container.Provide(func() *gomock.Controller {
 		c := gomock.NewController(t)
-		defer c.Finish()
 
 		return c
 	}))

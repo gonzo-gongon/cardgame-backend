@@ -7,11 +7,17 @@ import (
 	"time"
 )
 
-type UserSessionRepository struct {
+type UserSessionRepository interface {
+	GetUpdatedAt(userID string) (*time.Time, error)
+	Create(userID string, createdAt *time.Time) error
+	Update(userID string, updatedAt *time.Time) error
+}
+
+type UserSessionRepositoryImpl struct {
 	databaseGateway *gateway.DatabaseGateway
 }
 
-func (r *UserSessionRepository) GetUpdatedAt(userID string) (*time.Time, error) {
+func (r *UserSessionRepositoryImpl) GetUpdatedAt(userID string) (*time.Time, error) {
 	db, err := r.databaseGateway.Connect()
 	if err != nil {
 		return nil, err
@@ -33,7 +39,7 @@ func (r *UserSessionRepository) GetUpdatedAt(userID string) (*time.Time, error) 
 	return &userSession.LatestSessionAt, nil
 }
 
-func (r *UserSessionRepository) Create(userID string, createdAt *time.Time) error {
+func (r *UserSessionRepositoryImpl) Create(userID string, createdAt *time.Time) error {
 	db, err := r.databaseGateway.Connect()
 	if err != nil {
 		return err
@@ -56,7 +62,7 @@ func (r *UserSessionRepository) Create(userID string, createdAt *time.Time) erro
 	return nil
 }
 
-func (r *UserSessionRepository) Update(userID string, updatedAt *time.Time) error {
+func (r *UserSessionRepositoryImpl) Update(userID string, updatedAt *time.Time) error {
 	db, err := r.databaseGateway.Connect()
 	if err != nil {
 		return err
@@ -82,8 +88,8 @@ func (r *UserSessionRepository) Update(userID string, updatedAt *time.Time) erro
 
 func NewUserSessionRepository(
 	databaseGateway *gateway.DatabaseGateway,
-) (*UserSessionRepository, error) {
-	return &UserSessionRepository{
+) (UserSessionRepository, error) {
+	return &UserSessionRepositoryImpl{
 		databaseGateway: databaseGateway,
 	}, nil
 }

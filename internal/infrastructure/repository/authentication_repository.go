@@ -6,15 +6,22 @@ import (
 	"time"
 )
 
-type AuthenticationRepository struct {
+type AuthenticationRepository interface {
+	Generate(userID model.UUID[model.User]) (string, error)
+	GetUserIDBypassTokenExpiry(tokenString string) (*model.UUID[model.User], error)
+	GetUserID(tokenString string) (string, error)
+	GetIssuedAt(tokenString string) (*time.Time, error)
+}
+
+type AuthenticationRepositoryImpl struct {
 	authenticationGateway *gateway.AuthenticationGateway
 }
 
-func (r *AuthenticationRepository) Generate(userID model.UUID[model.User]) (string, error) {
+func (r *AuthenticationRepositoryImpl) Generate(userID model.UUID[model.User]) (string, error) {
 	return r.authenticationGateway.Generate(userID.String())
 }
 
-func (r *AuthenticationRepository) GetUserIDBypassTokenExpiry(tokenString string) (*model.UUID[model.User], error) {
+func (r *AuthenticationRepositoryImpl) GetUserIDBypassTokenExpiry(tokenString string) (*model.UUID[model.User], error) {
 	userID, err := r.authenticationGateway.GetUserIDBypassTokenExpiry(tokenString)
 
 	if err != nil {
@@ -26,18 +33,18 @@ func (r *AuthenticationRepository) GetUserIDBypassTokenExpiry(tokenString string
 	return &parsedUserId, err
 }
 
-func (r *AuthenticationRepository) GetUserID(tokenString string) (string, error) {
+func (r *AuthenticationRepositoryImpl) GetUserID(tokenString string) (string, error) {
 	return r.authenticationGateway.GetUserID(tokenString)
 }
 
-func (r *AuthenticationRepository) GetIssuedAt(tokenString string) (*time.Time, error) {
+func (r *AuthenticationRepositoryImpl) GetIssuedAt(tokenString string) (*time.Time, error) {
 	return r.authenticationGateway.GetIssuedAt(tokenString)
 }
 
 func NewAuthenticationRepository(
 	authenticationGateway *gateway.AuthenticationGateway,
-) (*AuthenticationRepository, error) {
-	return &AuthenticationRepository{
+) (AuthenticationRepository, error) {
+	return &AuthenticationRepositoryImpl{
 		authenticationGateway: authenticationGateway,
 	}, nil
 }
