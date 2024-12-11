@@ -26,7 +26,7 @@ func TestUserUsecase_正常系(t *testing.T) {
 
 		return c
 	}))
-	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.IUserRepository {
+	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.UserRepository {
 		r := NewMockIUserRepository(c)
 		r.EXPECT().GetByUserID(userID.String()).Return(expected, nil)
 
@@ -52,7 +52,7 @@ func TestUserUsecase_正常系_対象なし(t *testing.T) {
 
 		return c
 	}))
-	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.IUserRepository {
+	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.UserRepository {
 		r := NewMockIUserRepository(c)
 		r.EXPECT().GetByUserID(userID.String()).Return(expected, nil)
 
@@ -79,7 +79,7 @@ func TestUserUsecase_異常系_エラーあり(t *testing.T) {
 
 		return c
 	}))
-	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.IUserRepository {
+	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.UserRepository {
 		r := NewMockIUserRepository(c)
 		r.EXPECT().GetByUserID(userID.String()).Return(expected, expectedError)
 
