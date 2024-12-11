@@ -8,7 +8,7 @@ import (
 
 type AuthenticationUsecase struct {
 	authenticationRepository *repository.AuthenticationRepository
-	userRepository           repository.IUserRepository
+	userRepository           repository.UserRepository
 	userSessionRepository    *repository.UserSessionRepository
 }
 
@@ -96,7 +96,7 @@ func (u *AuthenticationUsecase) GetUser(token string) (*model.User, error) {
 
 func NewAuthenticationUsecase(
 	authenticationRepository *repository.AuthenticationRepository,
-	userRepository repository.IUserRepository,
+	userRepository repository.UserRepository,
 	userSessionRepository *repository.UserSessionRepository,
 ) (*AuthenticationUsecase, error) {
 	return &AuthenticationUsecase{
