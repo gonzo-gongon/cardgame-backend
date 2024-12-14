@@ -14,7 +14,7 @@ type AuthenticationRepository interface {
 }
 
 type AuthenticationRepositoryImpl struct {
-	authenticationGateway *gateway.AuthenticationGateway
+	authenticationGateway gateway.AuthenticationGateway
 }
 
 func (r *AuthenticationRepositoryImpl) Generate(userID model.UUID[model.User]) (string, error) {
@@ -42,7 +42,7 @@ func (r *AuthenticationRepositoryImpl) GetIssuedAt(tokenString string) (*time.Ti
 }
 
 func NewAuthenticationRepository(
-	authenticationGateway *gateway.AuthenticationGateway,
+	authenticationGateway gateway.AuthenticationGateway,
 ) (AuthenticationRepository, error) {
 	return &AuthenticationRepositoryImpl{
 		authenticationGateway: authenticationGateway,

@@ -21,7 +21,14 @@ type AuthenticationConfig struct {
 	secret []byte
 }
 
-type AuthenticationGateway struct {
+type AuthenticationGateway interface {
+	Generate(userID string) (string, error)
+	GetUserID(tokenString string) (string, error)
+	GetUserIDBypassTokenExpiry(tokenString string) (string, error)
+	GetIssuedAt(tokenString string) (*time.Time, error)
+}
+
+type AuthenticationGatewayImpl struct {
 	config AuthenticationConfig
 }
 
@@ -30,7 +37,7 @@ type UserClaims struct {
 	UserID string `json:"userId"`
 }
 
-func (g *AuthenticationGateway) parseToken(
+func (g *AuthenticationGatewayImpl) parseToken(
 	tokenString string,
 	claims jwt.Claims,
 ) (*jwt.Token, error) {
@@ -49,7 +56,7 @@ func (g *AuthenticationGateway) parseToken(
 	return token, err
 }
 
-func (g *AuthenticationGateway) verify(tokenString string) (*UserClaims, error) {
+func (g *AuthenticationGatewayImpl) verify(tokenString string) (*UserClaims, error) {
 	claims := UserClaims{}
 
 	token, err := g.parseToken(tokenString, &claims)
@@ -67,7 +74,7 @@ func (g *AuthenticationGateway) verify(tokenString string) (*UserClaims, error) 
 	return &claims, nil
 }
 
-func (g *AuthenticationGateway) verifyBypassExpiry(tokenString string) (*UserClaims, error) {
+func (g *AuthenticationGatewayImpl) verifyBypassExpiry(tokenString string) (*UserClaims, error) {
 	claims := UserClaims{}
 
 	token, err := g.parseToken(tokenString, &claims)
@@ -83,7 +90,7 @@ func (g *AuthenticationGateway) verifyBypassExpiry(tokenString string) (*UserCla
 	return &claims, nil
 }
 
-func (g *AuthenticationGateway) Generate(userID string) (string, error) {
+func (g *AuthenticationGatewayImpl) Generate(userID string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, UserClaims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    "system",
@@ -104,7 +111,7 @@ func (g *AuthenticationGateway) Generate(userID string) (string, error) {
 	return tokenString, nil
 }
 
-func (g *AuthenticationGateway) GetUserID(tokenString string) (string, error) {
+func (g *AuthenticationGatewayImpl) GetUserID(tokenString string) (string, error) {
 	claims, err := g.verify(tokenString)
 	if err != nil {
 		return "", err
@@ -113,7 +120,7 @@ func (g *AuthenticationGateway) GetUserID(tokenString string) (string, error) {
 	return claims.UserID, err
 }
 
-func (g *AuthenticationGateway) GetUserIDBypassTokenExpiry(tokenString string) (string, error) {
+func (g *AuthenticationGatewayImpl) GetUserIDBypassTokenExpiry(tokenString string) (string, error) {
 	claims, err := g.verifyBypassExpiry(tokenString)
 	if err != nil {
 		return "", err
@@ -122,7 +129,7 @@ func (g *AuthenticationGateway) GetUserIDBypassTokenExpiry(tokenString string) (
 	return claims.UserID, err
 }
 
-func (g *AuthenticationGateway) GetIssuedAt(tokenString string) (*time.Time, error) {
+func (g *AuthenticationGatewayImpl) GetIssuedAt(tokenString string) (*time.Time, error) {
 	claims, err := g.verifyBypassExpiry(tokenString)
 	if err != nil {
 		return nil, err
@@ -135,8 +142,8 @@ func (g *AuthenticationGateway) GetIssuedAt(tokenString string) (*time.Time, err
 
 func NewAuthenticationGateway(
 	config *configs.Config,
-) (*AuthenticationGateway, error) {
-	return &AuthenticationGateway{
+) (AuthenticationGateway, error) {
+	return &AuthenticationGatewayImpl{
 		config: AuthenticationConfig{
 			secret: []byte(config.JWT.Secret),
 		},
