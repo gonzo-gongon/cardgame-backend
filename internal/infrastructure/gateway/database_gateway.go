@@ -23,11 +23,15 @@ type DatabaseConfig struct {
 	port         string
 }
 
-type DatabaseGateway struct {
+type DatabaseGateway interface {
+	Connect() (*gorm.DB, error)
+}
+
+type DatabaseGatewayImpl struct {
 	config DatabaseConfig
 }
 
-func (g *DatabaseGateway) createDSN() string {
+func (g *DatabaseGatewayImpl) createDSN() string {
 	return fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/main?charset=utf8mb4&parseTime=True&loc=Local",
 		g.config.userName,
@@ -37,7 +41,7 @@ func (g *DatabaseGateway) createDSN() string {
 	)
 }
 
-func (g *DatabaseGateway) Connect() (*gorm.DB, error) {
+func (g *DatabaseGatewayImpl) Connect() (*gorm.DB, error) {
 	dsn := g.createDSN()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
@@ -52,8 +56,8 @@ func (g *DatabaseGateway) Connect() (*gorm.DB, error) {
 
 func NewDatabaseGateway(
 	config *configs.Config,
-) (*DatabaseGateway, error) {
-	return &DatabaseGateway{
+) (DatabaseGateway, error) {
+	return &DatabaseGatewayImpl{
 		config: DatabaseConfig{
 			userName:     config.MySQL.UserName,
 			userPassword: config.MySQL.UserPassword,

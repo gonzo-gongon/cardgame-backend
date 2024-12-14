@@ -14,7 +14,7 @@ type UserSessionRepository interface {
 }
 
 type UserSessionRepositoryImpl struct {
-	databaseGateway *gateway.DatabaseGateway
+	databaseGateway gateway.DatabaseGateway
 }
 
 func (r *UserSessionRepositoryImpl) GetUpdatedAt(userID string) (*time.Time, error) {
@@ -87,7 +87,7 @@ func (r *UserSessionRepositoryImpl) Update(userID string, updatedAt *time.Time) 
 }
 
 func NewUserSessionRepository(
-	databaseGateway *gateway.DatabaseGateway,
+	databaseGateway gateway.DatabaseGateway,
 ) (UserSessionRepository, error) {
 	return &UserSessionRepositoryImpl{
 		databaseGateway: databaseGateway,

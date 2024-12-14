@@ -1,11 +1,18 @@
 package repository
 
 import (
+	"fmt"
 	"original-card-game-backend/internal/domain/model"
 	"original-card-game-backend/internal/infrastructure/gateway"
 	inframodel "original-card-game-backend/internal/infrastructure/model"
 	"original-card-game-backend/internal/infrastructure/value"
 )
+
+type UserNotFoundError struct{}
+
+func (e *UserNotFoundError) Error() string {
+	return fmt.Sprintf("user not found error")
+}
 
 type UserRepository interface {
 	GetByUserID(userID string) (*model.User, error)
@@ -13,7 +20,7 @@ type UserRepository interface {
 }
 
 type UserRepositoryImpl struct {
-	databaseGateway *gateway.DatabaseGateway
+	databaseGateway gateway.DatabaseGateway
 }
 
 type CreateUser struct {
@@ -37,8 +44,12 @@ func (r *UserRepositoryImpl) GetByUserID(userID string) (*model.User, error) {
 		ID: parsedUserID,
 	}
 
-	if result := db.Find(&user); result.Error != nil {
+	result := db.Find(&user)
+	if result.Error != nil {
 		return nil, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return nil, &UserNotFoundError{}
 	}
 
 	entity := user.Domain()
@@ -65,7 +76,7 @@ func (r *UserRepositoryImpl) Create(createUser *CreateUser) (*model.User, error)
 }
 
 func NewUserRepository(
-	databaseGateway *gateway.DatabaseGateway,
+	databaseGateway gateway.DatabaseGateway,
 ) (UserRepository, error) {
 	return &UserRepositoryImpl{
 		databaseGateway: databaseGateway,
