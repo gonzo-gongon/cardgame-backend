@@ -6,6 +6,7 @@ import (
 	"original-card-game-backend/internal/infrastructure/gateway"
 	"original-card-game-backend/internal/infrastructure/repository"
 	"original-card-game-backend/internal/presentation/controller"
+	"original-card-game-backend/internal/presentation/presenter"
 
 	"go.uber.org/dig"
 )
@@ -51,6 +52,11 @@ func BuildContainer() *dig.Container {
 
 	// Controller
 	if err := container.Provide(controller.NewAuthenticationController); err != nil {
+		panic(err)
+	}
+
+	// Presenter
+	if err := container.Provide(presenter.NewAuthenticationPresenter); err != nil {
 		panic(err)
 	}
 
