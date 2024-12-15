@@ -54,9 +54,5 @@ func BuildContainer() *dig.Container {
 		panic(err)
 	}
 
-	if err := container.Provide(controller.NewUserController); err != nil {
-		panic(err)
-	}
-
 	return container
 }

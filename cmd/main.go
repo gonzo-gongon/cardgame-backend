@@ -22,12 +22,6 @@ func main() { //nolint:unused
 		panic(err)
 	}
 
-	if err := container.Invoke(func(c *controller.UserController) {
-		r.GET("/user", c.GetOne)
-	}); err != nil {
-		panic(err)
-	}
-
 	// panicが出るのでエラーチェックしない
 	r.Run(":8080") //nolint:errcheck
 }
