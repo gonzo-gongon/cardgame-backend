@@ -5,6 +5,7 @@ import (
 
 	"original-card-game-backend/cmd/app"
 	"original-card-game-backend/internal/presentation/controller"
+	"original-card-game-backend/internal/presentation/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,10 +16,15 @@ func main() { //nolint:unused
 
 	r := gin.Default()
 
-	if err := container.Invoke(func(c *controller.AuthenticationController) {
-		r.POST("/signup", c.SignUp)
-		r.POST("/refresh", c.Refresh)
-	}); err != nil {
+	if err := container.Invoke(
+		func(
+			c *controller.AuthenticationController,
+			m *middleware.TokenRefreshMiddleware,
+		) {
+			r.POST("/signup", c.SignUp)
+			r.POST("/refresh", m.Handler(), c.Refresh)
+		},
+	); err != nil {
 		panic(err)
 	}
 
