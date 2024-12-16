@@ -15,9 +15,10 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestAuthenticationUsecase_SignUp_正常系(t *testing.T) {
+func TestAuthenticationUsecase_SignUp_正常系(t *testing.T) { //nolint:asciicheck
+	const token = "thisistoken"
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
-	token := "thisistoken"
 	user := &model.User{
 		ID:   userID,
 		Name: "name",
@@ -63,10 +64,12 @@ func TestAuthenticationUsecase_SignUp_正常系(t *testing.T) {
 	}))
 }
 
-func TestAuthenticationUsecase_Refresh_正常系(t *testing.T) {
+func TestAuthenticationUsecase_Refresh_正常系(t *testing.T) { //nolint:asciicheck
+	const token = "thisistoken"
+
+	const newToken = "thisisnewtoken"
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
-	token := "thisistoken"
-	newToken := "thisisnewtoken"
 	loc, _ := time.LoadLocation("Asia/Tokyo")
 	issuedAt := time.Date(2024, 12, 14, 0, 0, 0, 0, loc)
 	newIssuedAt := time.Date(2024, 12, 14, 1, 0, 0, 0, loc)
@@ -78,6 +81,7 @@ func TestAuthenticationUsecase_Refresh_正常系(t *testing.T) {
 
 		return c
 	}))
+	//nolint:varnamelen
 	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.AuthenticationRepository {
 		r := mockrepository.NewMockAuthenticationRepository(c)
 		r.EXPECT().Generate(userID).Return(newToken, nil)
@@ -108,10 +112,12 @@ func TestAuthenticationUsecase_Refresh_正常系(t *testing.T) {
 	}))
 }
 
-func TestAuthenticationUsecase_Refresh_異常系_トークンが最新ではない(t *testing.T) {
+func TestAuthenticationUsecase_Refresh_異常系_トークンが最新ではない(t *testing.T) { //nolint:asciicheck
+	const token = "thisistoken"
+
+	const newToken = "thisisnewtoken"
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
-	token := "thisistoken"
-	newToken := "thisisnewtoken"
 	loc, _ := time.LoadLocation("Asia/Tokyo")
 	issuedAt := time.Date(2024, 12, 13, 0, 0, 0, 0, loc)
 	updatedAt := time.Date(2024, 12, 14, 0, 0, 0, 0, loc)
@@ -122,6 +128,7 @@ func TestAuthenticationUsecase_Refresh_異常系_トークンが最新ではな�
 
 		return c
 	}))
+	//nolint:varnamelen
 	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.AuthenticationRepository {
 		r := mockrepository.NewMockAuthenticationRepository(c)
 		r.EXPECT().Generate(gomock.Any()).Times(0)
@@ -152,9 +159,10 @@ func TestAuthenticationUsecase_Refresh_異常系_トークンが最新ではな�
 	}))
 }
 
-func TestAuthenticationUsecase_GetUser_正常系(t *testing.T) {
+func TestAuthenticationUsecase_GetUser_正常系(t *testing.T) { //nolint:asciicheck
+	const token = "thisistoken"
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
-	token := "thisistoken"
 	expected := &model.User{
 		ID:   userID,
 		Name: "",
@@ -192,9 +200,11 @@ func TestAuthenticationUsecase_GetUser_正常系(t *testing.T) {
 	}))
 }
 
-func TestAuthenticationUsecase_GetUser_異常系_該当ユーザーなし(t *testing.T) {
-	token := "thisistoken"
+func TestAuthenticationUsecase_GetUser_異常系_該当ユーザーなし(t *testing.T) { //nolint:asciicheck
+	const token = "thisistoken"
+
 	var expected *model.User
+
 	expectedError := errors.New("token not found")
 
 	container := dig.New()
@@ -225,7 +235,7 @@ func TestAuthenticationUsecase_GetUser_異常系_該当ユーザーなし(t *tes
 
 	assert.NoError(t, container.Invoke(func(u *usecase.AuthenticationUsecase) {
 		actual, actualError := u.GetUser(token)
-		assert.Error(t, actualError, expectedError)
+		assert.ErrorIs(t, actualError, expectedError)
 		assert.Equal(t, expected, actual)
 	}))
 }

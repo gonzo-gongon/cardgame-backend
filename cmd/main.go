@@ -14,20 +14,20 @@ import (
 func main() { //nolint:unused
 	container := app.BuildContainer()
 
-	r := gin.Default()
+	server := gin.Default()
 
 	if err := container.Invoke(
 		func(
 			c *controller.AuthenticationController,
 			m *middleware.TokenRefreshMiddleware,
 		) {
-			r.POST("/signup", c.SignUp)
-			r.POST("/refresh", m.Handler(), c.Refresh)
+			server.POST("/signup", c.SignUp)
+			server.POST("/refresh", m.Handler(), c.Refresh)
 		},
 	); err != nil {
 		panic(err)
 	}
 
 	// panicが出るのでエラーチェックしない
-	r.Run(":8080") //nolint:errcheck
+	server.Run(":8080") //nolint:errcheck
 }

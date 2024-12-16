@@ -6,14 +6,19 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewDbMock() (*gorm.DB, sqlmock.Sqlmock, error) {
+//nolint:ireturn
+func NewDBMock() (*gorm.DB, sqlmock.Sqlmock, error) {
 	sqlDB, mock, err := sqlmock.New()
+
 	if err != nil {
 		return nil, nil, err
 	}
+
+	//nolint:exhaustruct
 	mockDB, err := gorm.Open(mysql.New(mysql.Config{
 		Conn:                      sqlDB,
 		SkipInitializeWithVersion: true,
 	}), &gorm.Config{})
+
 	return mockDB, mock, err
 }

@@ -17,6 +17,12 @@ func (e *SigningMethodError) Error() string {
 	return fmt.Sprintf("Unexpected signing method: %v", e.alg)
 }
 
+type InvalidTokenError struct{}
+
+func (e *InvalidTokenError) Error() string {
+	return "token is not valid"
+}
+
 type AuthenticationConfig struct {
 	secret []byte
 }
@@ -50,9 +56,11 @@ func (g *AuthenticationGatewayImpl) parseToken(
 					alg: token.Header["alg"],
 				}
 			}
+
 			return g.config.secret, nil
 		},
 	)
+
 	return token, err
 }
 
@@ -60,15 +68,13 @@ func (g *AuthenticationGatewayImpl) verify(tokenString string) (*UserClaims, err
 	claims := UserClaims{}
 
 	token, err := g.parseToken(tokenString, &claims)
+
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
-	if !token.Valid {
-		err := fmt.Errorf("token is not valid")
 
-		fmt.Println(err)
-		return nil, err
+	if !token.Valid {
+		return nil, &InvalidTokenError{}
 	}
 
 	return &claims, nil
@@ -77,14 +83,11 @@ func (g *AuthenticationGatewayImpl) verify(tokenString string) (*UserClaims, err
 func (g *AuthenticationGatewayImpl) verifyBypassExpiry(tokenString string) (*UserClaims, error) {
 	claims := UserClaims{}
 
-	token, err := g.parseToken(tokenString, &claims)
+	_, err := g.parseToken(tokenString, &claims)
 	if err != nil {
 		if !errors.Is(err, jwt.ErrTokenExpired) {
-			fmt.Println(err)
 			return nil, err
 		}
-
-		fmt.Printf("expired token: %o", token)
 	}
 
 	return &claims, nil
@@ -140,6 +143,7 @@ func (g *AuthenticationGatewayImpl) GetIssuedAt(tokenString string) (*time.Time,
 	return &issuedAt, nil
 }
 
+//nolint:ireturn
 func NewAuthenticationGateway(
 	config *configs.Config,
 ) (AuthenticationGateway, error) {

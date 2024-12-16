@@ -54,6 +54,7 @@ func (g *DatabaseGatewayImpl) Connect() (*gorm.DB, error) {
 	return db, nil
 }
 
+//nolint:ireturn
 func NewDatabaseGateway(
 	config *configs.Config,
 ) (DatabaseGateway, error) {

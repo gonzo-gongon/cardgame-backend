@@ -17,15 +17,15 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestUserSessionRepository_GetUpdatedAt_正常系(t *testing.T) {
+func TestUserSessionRepository_GetUpdatedAt_正常系(t *testing.T) { //nolint:asciicheck
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
-	(&userID).Parse(domainUserID.String())
+	assert.NoError(t, (&userID).Parse(domainUserID.String()))
 
 	loc, _ := time.LoadLocation("Asia/Tokyo")
 	latestSessionAt := time.Date(2024, 12, 14, 0, 0, 0, 0, loc)
 
-	db, mock, _ := mockgateway.NewDbMock()
+	conn, mock, _ := mockgateway.NewDBMock()
 
 	rows := sqlmock.NewRows([]string{"user_id", "latest_session_at"}).
 		AddRow(userID, latestSessionAt)
@@ -43,7 +43,7 @@ func TestUserSessionRepository_GetUpdatedAt_正常系(t *testing.T) {
 	}))
 	assert.NoError(t, container.Provide(func(c *gomock.Controller) gateway.DatabaseGateway {
 		r := mockgateway.NewMockDatabaseGateway(c)
-		r.EXPECT().Connect().Return(db, nil)
+		r.EXPECT().Connect().Return(conn, nil)
 
 		return r
 	}))
@@ -55,15 +55,15 @@ func TestUserSessionRepository_GetUpdatedAt_正常系(t *testing.T) {
 		assert.Equal(t, &latestSessionAt, actual)
 	}))
 }
-func TestUserSessionRepository_Create_正常系(t *testing.T) {
+func TestUserSessionRepository_Create_正常系(t *testing.T) { //nolint:asciicheck
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
-	(&userID).Parse(domainUserID.String())
+	assert.NoError(t, (&userID).Parse(domainUserID.String()))
 
 	loc, _ := time.LoadLocation("Asia/Tokyo")
 	latestSessionAt := time.Date(2024, 12, 14, 0, 0, 0, 0, loc)
 
-	db, mock, _ := mockgateway.NewDbMock()
+	conn, mock, _ := mockgateway.NewDBMock()
 
 	mock.ExpectBegin()
 	mock.ExpectExec(regexp.QuoteMeta(
@@ -80,7 +80,7 @@ func TestUserSessionRepository_Create_正常系(t *testing.T) {
 	}))
 	assert.NoError(t, container.Provide(func(c *gomock.Controller) gateway.DatabaseGateway {
 		r := mockgateway.NewMockDatabaseGateway(c)
-		r.EXPECT().Connect().Return(db, nil)
+		r.EXPECT().Connect().Return(conn, nil)
 
 		return r
 	}))
@@ -92,15 +92,15 @@ func TestUserSessionRepository_Create_正常系(t *testing.T) {
 	}))
 }
 
-func TestUserSessionRepository_Update_正常系(t *testing.T) {
+func TestUserSessionRepository_Update_正常系(t *testing.T) { //nolint:asciicheck
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
-	(&userID).Parse(domainUserID.String())
+	assert.NoError(t, (&userID).Parse(domainUserID.String()))
 
 	loc, _ := time.LoadLocation("Asia/Tokyo")
 	latestSessionAt := time.Date(2024, 12, 14, 0, 0, 0, 0, loc)
 
-	db, mock, _ := mockgateway.NewDbMock()
+	conn, mock, _ := mockgateway.NewDBMock()
 
 	mock.ExpectBegin()
 	mock.ExpectExec(regexp.QuoteMeta(
@@ -117,7 +117,7 @@ func TestUserSessionRepository_Update_正常系(t *testing.T) {
 	}))
 	assert.NoError(t, container.Provide(func(c *gomock.Controller) gateway.DatabaseGateway {
 		r := mockgateway.NewMockDatabaseGateway(c)
-		r.EXPECT().Connect().Return(db, nil)
+		r.EXPECT().Connect().Return(conn, nil)
 
 		return r
 	}))

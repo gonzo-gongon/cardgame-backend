@@ -9,7 +9,9 @@ import (
 )
 
 const authorizationHeaderName = "Authorization"
+
 const bearerPrefixFirstLetterUpper = "Bearer "
+
 const bearerPrefixFirstLetterLower = "bearer "
 
 const tokenContextKey = "AuthorizationToken"
@@ -25,16 +27,18 @@ type TokenRefreshMiddleware struct {
 	authenticationPresenter *presenter.AuthenticationPresenter
 }
 
-func getTokenFromAuthorizationHeader(c *gin.Context) (string, error) {
-	authorization := c.GetHeader(authorizationHeaderName)
+func getTokenFromAuthorizationHeader(ctx *gin.Context) (string, error) {
+	authorization := ctx.GetHeader(authorizationHeaderName)
 	if authorization == "" {
 		return "", &TokenNotSuppliedError{}
 	}
 
 	token := ""
+
 	if strings.HasPrefix(authorization, bearerPrefixFirstLetterUpper) {
 		token = strings.TrimPrefix(authorization, bearerPrefixFirstLetterUpper)
 	}
+
 	if strings.HasPrefix(authorization, bearerPrefixFirstLetterLower) {
 		token = strings.TrimPrefix(authorization, bearerPrefixFirstLetterLower)
 	}
@@ -42,28 +46,29 @@ func getTokenFromAuthorizationHeader(c *gin.Context) (string, error) {
 	return token, nil
 }
 
-func setToken(c *gin.Context, token string) {
-	c.Set(tokenContextKey, token)
+func setToken(ctx *gin.Context, token string) {
+	ctx.Set(tokenContextKey, token)
 }
 
-func GetToken(c *gin.Context) string {
-	return c.GetString(tokenContextKey)
+func GetToken(ctx *gin.Context) string {
+	return ctx.GetString(tokenContextKey)
 }
 
 func (m *TokenRefreshMiddleware) Handler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		token, err := getTokenFromAuthorizationHeader(c)
+	return func(ctx *gin.Context) {
+		token, err := getTokenFromAuthorizationHeader(ctx)
 		if err != nil {
-			c.JSON(
+			ctx.JSON(
 				http.StatusUnauthorized,
 				m.authenticationPresenter.Error(err),
 			)
-			c.Abort()
+			ctx.Abort()
+
 			return
 		}
 
-		setToken(c, token)
-		c.Next()
+		setToken(ctx, token)
+		ctx.Next()
 	}
 }
 

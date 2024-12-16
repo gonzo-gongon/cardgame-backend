@@ -1,10 +1,15 @@
 package usecase
 
 import (
-	"fmt"
 	"original-card-game-backend/internal/domain/model"
 	"original-card-game-backend/internal/infrastructure/repository"
 )
+
+type NotLatestTokenError struct{}
+
+func (e *NotLatestTokenError) Error() string {
+	return "this is not the latest token"
+}
 
 type AuthenticationUsecase struct {
 	authenticationRepository repository.AuthenticationRepository
@@ -16,22 +21,27 @@ func (u *AuthenticationUsecase) SignUp() (string, error) {
 	createUser := repository.CreateUser{
 		Name: "name",
 	}
+
 	user, err := u.userRepository.Create(&createUser)
+
 	if err != nil {
 		return "", err
 	}
 
 	token, err := u.authenticationRepository.Generate(user.ID)
+
 	if err != nil {
 		return "", err
 	}
 
 	issuedAt, err := u.authenticationRepository.GetIssuedAt(token)
+
 	if err != nil {
 		return "", err
 	}
 
 	err = u.userSessionRepository.Create(user.ID.String(), issuedAt)
+
 	if err != nil {
 		return "", err
 	}
@@ -58,8 +68,7 @@ func (u *AuthenticationUsecase) Refresh(token string) (string, error) {
 	}
 
 	if updatedAt.Compare(*issuedAt) != 0 {
-		fmt.Printf("t1: %s t2: %s\n", issuedAt, updatedAt)
-		return "", fmt.Errorf("this is not the latest token")
+		return "", &NotLatestTokenError{}
 	}
 
 	newToken, err := u.authenticationRepository.Generate(userIDValue)

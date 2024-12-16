@@ -13,10 +13,10 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestAuthenticationRepository_Generate_正常系(t *testing.T) {
+func TestAuthenticationRepository_Generate_正常系(t *testing.T) { //nolint:asciicheck
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 
-	token := "thisistoken"
+	const token = "thisistoken"
 
 	container := dig.New()
 	assert.NoError(t, container.Provide(func() *gomock.Controller {
@@ -39,10 +39,10 @@ func TestAuthenticationRepository_Generate_正常系(t *testing.T) {
 	}))
 }
 
-func TestAuthenticationRepository_GetUserIDBypassTokenExpiry_正常系(t *testing.T) {
+func TestAuthenticationRepository_GetUserIDBypassTokenExpiry_正常系(t *testing.T) { //nolint:asciicheck
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 
-	token := "thisistoken"
+	const token = "thisistoken"
 
 	container := dig.New()
 	assert.NoError(t, container.Provide(func() *gomock.Controller {
@@ -65,10 +65,10 @@ func TestAuthenticationRepository_GetUserIDBypassTokenExpiry_正常系(t *testin
 	}))
 }
 
-func TestAuthenticationRepository_GetUserID_正常系(t *testing.T) {
+func TestAuthenticationRepository_GetUserID_正常系(t *testing.T) { //nolint:asciicheck
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 
-	token := "thisistoken"
+	const token = "thisistoken"
 
 	container := dig.New()
 	assert.NoError(t, container.Provide(func() *gomock.Controller {
@@ -91,11 +91,11 @@ func TestAuthenticationRepository_GetUserID_正常系(t *testing.T) {
 	}))
 }
 
-func TestAuthenticationRepository_GetIssuedAt_正常系(t *testing.T) {
+func TestAuthenticationRepository_GetIssuedAt_正常系(t *testing.T) { //nolint:asciicheck
 	loc, _ := time.LoadLocation("Asia/Tokyo")
 	issuedAt := time.Date(2024, 12, 14, 0, 0, 0, 0, loc)
 
-	token := "thisistoken"
+	const token = "thisistoken"
 
 	container := dig.New()
 	assert.NoError(t, container.Provide(func() *gomock.Controller {

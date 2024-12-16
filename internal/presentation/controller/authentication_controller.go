@@ -14,35 +14,37 @@ type AuthenticationController struct {
 	authenticationPresenter *presenter.AuthenticationPresenter
 }
 
-func (c *AuthenticationController) SignUp(context *gin.Context) {
+func (c *AuthenticationController) SignUp(ctx *gin.Context) {
 	token, err := c.authenticationUsecase.SignUp()
 	if err != nil {
-		context.JSON(
+		ctx.JSON(
 			http.StatusUnprocessableEntity,
 			c.authenticationPresenter.Error(err),
 		)
+
 		return
 	}
 
-	context.JSON(
+	ctx.JSON(
 		http.StatusCreated,
 		c.authenticationPresenter.Success(token),
 	)
 }
 
-func (c *AuthenticationController) Refresh(context *gin.Context) {
-	tokenString := middleware.GetToken(context)
+func (c *AuthenticationController) Refresh(ctx *gin.Context) {
+	tokenString := middleware.GetToken(ctx)
 
 	token, err := c.authenticationUsecase.Refresh(tokenString)
 	if err != nil {
-		context.JSON(
+		ctx.JSON(
 			http.StatusUnprocessableEntity,
 			c.authenticationPresenter.Error(err),
 		)
+
 		return
 	}
 
-	context.JSON(
+	ctx.JSON(
 		http.StatusCreated,
 		c.authenticationPresenter.Success(token),
 	)

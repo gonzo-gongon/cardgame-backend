@@ -16,16 +16,16 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestUserRepository_GetByUserID_正常系_レコードあり(t *testing.T) {
+func TestUserRepository_GetByUserID_正常系_レコードあり(t *testing.T) { //nolint:asciicheck
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
-	(&userID).Parse(domainUserID.String())
+	assert.NoError(t, (&userID).Parse(domainUserID.String()))
 
 	expected := &model.User{
 		ID:   domainUserID,
 		Name: "",
 	}
-	db, mock, _ := mockgateway.NewDbMock()
+	db, mock, _ := mockgateway.NewDBMock()
 
 	rows := sqlmock.NewRows([]string{"id", "name"}).
 		AddRow(userID, "")
@@ -56,13 +56,13 @@ func TestUserRepository_GetByUserID_正常系_レコードあり(t *testing.T) {
 	}))
 }
 
-func TestUserRepository_GetByUserID_異常系_レコードなし(t *testing.T) {
+func TestUserRepository_GetByUserID_異常系_レコードなし(t *testing.T) { //nolint:asciicheck
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
-	(&userID).Parse(domainUserID.String())
+	assert.NoError(t, (&userID).Parse(domainUserID.String()))
 
 	var expected *model.User
-	db, mock, _ := mockgateway.NewDbMock()
+	db, mock, _ := mockgateway.NewDBMock()
 
 	rows := sqlmock.NewRows([]string{"id", "name"})
 
@@ -94,7 +94,7 @@ func TestUserRepository_GetByUserID_異常系_レコードなし(t *testing.T) {
 
 // User.BeforeCreateでIDが強制挿入されるため、IDまわりの確認はしない
 // User.BeforeCreateをスタブ化すれば回避できるが、そこまでメリットがなさそうなのでやらない
-func TestUserRepository_Create_正常系(t *testing.T) {
+func TestUserRepository_Create_正常系(t *testing.T) { //nolint:asciicheck
 	createUser := &repository.CreateUser{
 		Name: "name",
 	}
@@ -102,7 +102,7 @@ func TestUserRepository_Create_正常系(t *testing.T) {
 	expected := &model.User{
 		Name: "name",
 	}
-	db, mock, _ := mockgateway.NewDbMock()
+	conn, mock, _ := mockgateway.NewDBMock()
 
 	mock.ExpectBegin()
 	mock.ExpectExec(regexp.QuoteMeta(
@@ -119,7 +119,7 @@ func TestUserRepository_Create_正常系(t *testing.T) {
 	}))
 	assert.NoError(t, container.Provide(func(c *gomock.Controller) gateway.DatabaseGateway {
 		r := mockgateway.NewMockDatabaseGateway(c)
-		r.EXPECT().Connect().Return(db, nil)
+		r.EXPECT().Connect().Return(conn, nil)
 
 		return r
 	}))

@@ -28,9 +28,9 @@ func (r *AuthenticationRepositoryImpl) GetUserIDBypassTokenExpiry(tokenString st
 		return nil, err
 	}
 
-	parsedUserId := model.UUID[model.User](userID)
+	parsedUserID := model.UUID[model.User](userID)
 
-	return &parsedUserId, err
+	return &parsedUserID, err
 }
 
 func (r *AuthenticationRepositoryImpl) GetUserID(tokenString string) (string, error) {
@@ -41,6 +41,7 @@ func (r *AuthenticationRepositoryImpl) GetIssuedAt(tokenString string) (*time.Ti
 	return r.authenticationGateway.GetIssuedAt(tokenString)
 }
 
+//nolint:ireturn
 func NewAuthenticationRepository(
 	authenticationGateway gateway.AuthenticationGateway,
 ) (AuthenticationRepository, error) {
