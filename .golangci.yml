@@ -9,3 +9,118 @@ linters-settings:
   perfsprint:
     sprintf1: false
     strconcat: false
+  depguard:
+    rules:
+      main:
+        list-mode: strict
+        files:
+          - "**/cmd/*.go"
+        allow:
+          - $gostd
+          - github.com/gin-gonic/gin
+          - original-card-game-backend/cmd/app
+          - original-card-game-backend/internal/presentation/controller
+          - original-card-game-backend/internal/presentation/middleware
+      di:
+        list-mode: strict
+        files:
+          - "**/cmd/app/di.go"
+        allow:
+          - $gostd
+          - original-card-game-backend/configs
+          - original-card-game-backend/internal/application/usecase
+          - original-card-game-backend/internal/infrastructure/gateway
+          - original-card-game-backend/internal/infrastructure/repository
+          - original-card-game-backend/internal/presentation/middleware
+          - original-card-game-backend/internal/presentation/controller
+          - original-card-game-backend/internal/presentation/presenter
+      config:
+        list-mode: strict
+        files:
+          - "**/configs/*.go"
+        allow:
+          - $gostd
+          - github.com/joho/godotenv
+      gateway:
+        list-mode: strict
+        files:
+          - "**/internal/infrastructure/gateway/*.go"
+        allow:
+          - $gostd
+          - github.com/golang-jwt/jwt/v5
+          - original-card-game-backend/configs
+      gateway-test:
+        list-mode: strict
+        files:
+          - "**/internal-test/infrastructure/gateway/*.go"
+        allow:
+          - $gostd
+          - github.com/DATA-DOG/go-sqlmock
+      repository:
+        list-mode: strict
+        files:
+          - "**/internal/infrastructure/repository/*.go"
+        allow:
+          - $gostd
+          - original-card-game-backend/internal/domain/model
+          - original-card-game-backend/internal/infrastructure/value
+          - original-card-game-backend/internal/infrastructure/model
+          - original-card-game-backend/internal/infrastructure/gateway
+      repository-test:
+        list-mode: strict
+        files:
+          - "**/internal-test/infrastructure/repository/*.go"
+        allow:
+          - $gostd
+          - github.com/stretchr/testify/assert
+          - github.com/DATA-DOG/go-sqlmock
+          - original-card-game-backend/internal/domain/model
+          - original-card-game-backend/internal/infrastructure/value
+          - original-card-game-backend/internal/infrastructure/model
+          - original-card-game-backend/internal/infrastructure/gateway
+          - original-card-game-backend/internal/infrastructure/repository
+          - original-card-game-backend/internal-test/infrastructure/gateway
+      usecase:
+        list-mode: strict
+        files:
+          - "**/internal/application/usecase/*.go"
+        allow:
+          - $gostd
+          - original-card-game-backend/internal/domain/model
+          - original-card-game-backend/internal/infrastructure/repository
+      usecase-test:
+        list-mode: strict
+        files:
+          - "**/internal-test/application/usecase/*.go"
+        allow:
+          - $gostd
+          - github.com/stretchr/testify/assert
+          - original-card-game-backend/internal/domain/model
+          - original-card-game-backend/internal/application/usecase
+          - original-card-game-backend/internal/infrastructure/repository
+          - original-card-game-backend/internal-test/infrastructure/repository
+      middleware:
+        list-mode: strict
+        files:
+          - "**/internal/presentation/middleware/*.go"
+        allow:
+          - $gostd
+          - github.com/gin-gonic/gin
+          - original-card-game-backend/internal/presentation/presenter
+      controller:
+        list-mode: strict
+        files:
+          - "**/internal/presentation/controller/*.go"
+        allow:
+          - $gostd
+          - github.com/gin-gonic/gin
+          - original-card-game-backend/internal/application/usecase
+          - original-card-game-backend/internal/presentation/middleware
+          - original-card-game-backend/internal/presentation/presenter
+      presenter:
+        list-mode: strict
+        files:
+          - "**/internal/presentation/presenter/*.go"
+        allow:
+          - $gostd
+          - original-card-game-backend/internal/presentation/response
