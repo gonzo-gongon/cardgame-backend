@@ -143,7 +143,7 @@ func (g *AuthenticationGatewayImpl) GetIssuedAt(tokenString string) (*time.Time,
 	return &issuedAt, nil
 }
 
-//nolint:ireturn
+//nolint:ireturn // DIのためのコードなので許容する
 func NewAuthenticationGateway(
 	config *configs.Config,
 ) (AuthenticationGateway, error) {

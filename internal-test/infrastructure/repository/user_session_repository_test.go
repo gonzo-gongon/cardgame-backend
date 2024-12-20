@@ -17,7 +17,9 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestUserSessionRepository_GetUpdatedAt_正常系(t *testing.T) { //nolint:asciicheck
+func TestUserSessionRepository_GetUpdatedAt_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
 	assert.NoError(t, (&userID).Parse(domainUserID.String()))
@@ -55,7 +57,9 @@ func TestUserSessionRepository_GetUpdatedAt_正常系(t *testing.T) { //nolint:a
 		assert.Equal(t, &latestSessionAt, actual)
 	}))
 }
-func TestUserSessionRepository_Create_正常系(t *testing.T) { //nolint:asciicheck
+func TestUserSessionRepository_Create_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
 	assert.NoError(t, (&userID).Parse(domainUserID.String()))
@@ -92,7 +96,9 @@ func TestUserSessionRepository_Create_正常系(t *testing.T) { //nolint:asciich
 	}))
 }
 
-func TestUserSessionRepository_Update_正常系(t *testing.T) { //nolint:asciicheck
+func TestUserSessionRepository_Update_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
 	assert.NoError(t, (&userID).Parse(domainUserID.String()))

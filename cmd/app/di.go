@@ -12,7 +12,7 @@ import (
 	"go.uber.org/dig"
 )
 
-func BuildContainer() *dig.Container {
+func BuildContainer() *dig.Container { //nolint:cyclop // DIのためのコードなので許容する
 	container := dig.New()
 
 	// Config

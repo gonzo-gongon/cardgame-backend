@@ -41,7 +41,7 @@ func (r *AuthenticationRepositoryImpl) GetIssuedAt(tokenString string) (*time.Ti
 	return r.authenticationGateway.GetIssuedAt(tokenString)
 }
 
-//nolint:ireturn
+//nolint:ireturn // DIのためのコードなので許容する
 func NewAuthenticationRepository(
 	authenticationGateway gateway.AuthenticationGateway,
 ) (AuthenticationRepository, error) {

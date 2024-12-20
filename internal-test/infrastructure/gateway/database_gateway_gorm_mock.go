@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//nolint:ireturn
+//nolint:ireturn // DIのためのコードなので許容する
 func NewDBMock() (*gorm.DB, sqlmock.Sqlmock, error) {
 	sqlDB, mock, err := sqlmock.New()
 
@@ -14,7 +14,7 @@ func NewDBMock() (*gorm.DB, sqlmock.Sqlmock, error) {
 		return nil, nil, err
 	}
 
-	//nolint:exhaustruct
+	//nolint:exhaustruct // テストのためのモックコードなので許容する
 	mockDB, err := gorm.Open(mysql.New(mysql.Config{
 		Conn:                      sqlDB,
 		SkipInitializeWithVersion: true,

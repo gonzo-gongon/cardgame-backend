@@ -2,6 +2,10 @@ linters:
   # よい設定がわかるまでenable-allにしておく
   enable-all: true
   disable:
+    - wrapcheck
+    - wsl
+    - mnd
+    - exhaustruct
 
 linters-settings:
   godot:
@@ -9,6 +13,10 @@ linters-settings:
   perfsprint:
     sprintf1: false
     strconcat: false
+  nolintlint:
+    allow-unused: true
+    require-explanation: true
+    require-specific: true
   depguard:
     rules:
       main:

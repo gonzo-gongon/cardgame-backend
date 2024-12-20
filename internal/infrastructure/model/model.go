@@ -12,6 +12,6 @@ type General struct {
 }
 
 type GeneralWithDelete struct {
-	General   `gorm:"embedded"`
+	General   `gorm:"embedded" json:"-"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }

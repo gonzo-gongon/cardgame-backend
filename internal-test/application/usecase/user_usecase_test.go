@@ -13,7 +13,9 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestUserUsecase_GetByUserID_正常系(t *testing.T) { //nolint:asciicheck
+func TestUserUsecase_GetByUserID_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	expected := &model.User{
 		ID:   userID,
@@ -41,7 +43,9 @@ func TestUserUsecase_GetByUserID_正常系(t *testing.T) { //nolint:asciicheck
 	}))
 }
 
-func TestUserUsecase_GetByUserID_正常系_対象なし(t *testing.T) { //nolint:asciicheck
+func TestUserUsecase_GetByUserID_正常系_対象なし(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var expected *model.User
 
@@ -66,7 +70,9 @@ func TestUserUsecase_GetByUserID_正常系_対象なし(t *testing.T) { //nolint
 	}))
 }
 
-func TestUserUsecase_GetByUserID_異常系_エラーあり(t *testing.T) { //nolint:asciicheck
+func TestUserUsecase_GetByUserID_異常系_エラーあり(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var expected *model.User
 	expectedError := errors.New("")

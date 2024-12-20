@@ -89,7 +89,7 @@ func (r *UserSessionRepositoryImpl) Update(userID string, updatedAt *time.Time) 
 	return nil
 }
 
-//nolint:ireturn
+//nolint:ireturn // DIのためのコードなので許容する
 func NewUserSessionRepository(
 	databaseGateway gateway.DatabaseGateway,
 ) (UserSessionRepository, error) {

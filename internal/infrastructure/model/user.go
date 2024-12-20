@@ -13,8 +13,7 @@ type User struct {
 	Name              string           `gorm:"column:name;type:varchar(30);"`
 }
 
-// 引数未使用だがgorm側で呼び出すためそのままにしておく
-func (d *User) BeforeCreate(db *gorm.DB) (err error) { //nolint:revive,nonamedreturns
+func (d *User) BeforeCreate(db *gorm.DB) (err error) { //nolint:revive,nonamedreturns // 引数未使用だがgorm側で呼び出すためそのままにしておく
 	d.ID = d.ID.New()
 
 	return

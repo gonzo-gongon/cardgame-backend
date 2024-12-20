@@ -13,7 +13,9 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestAuthenticationRepository_Generate_正常系(t *testing.T) { //nolint:asciicheck
+func TestAuthenticationRepository_Generate_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 
 	const token = "thisistoken"
@@ -39,7 +41,9 @@ func TestAuthenticationRepository_Generate_正常系(t *testing.T) { //nolint:as
 	}))
 }
 
-func TestAuthenticationRepository_GetUserIDBypassTokenExpiry_正常系(t *testing.T) { //nolint:asciicheck
+func TestAuthenticationRepository_GetUserIDBypassTokenExpiry_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 
 	const token = "thisistoken"
@@ -65,7 +69,9 @@ func TestAuthenticationRepository_GetUserIDBypassTokenExpiry_正常系(t *testin
 	}))
 }
 
-func TestAuthenticationRepository_GetUserID_正常系(t *testing.T) { //nolint:asciicheck
+func TestAuthenticationRepository_GetUserID_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 
 	const token = "thisistoken"
@@ -91,7 +97,9 @@ func TestAuthenticationRepository_GetUserID_正常系(t *testing.T) { //nolint:a
 	}))
 }
 
-func TestAuthenticationRepository_GetIssuedAt_正常系(t *testing.T) { //nolint:asciicheck
+func TestAuthenticationRepository_GetIssuedAt_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	loc, _ := time.LoadLocation("Asia/Tokyo")
 	issuedAt := time.Date(2024, 12, 14, 0, 0, 0, 0, loc)
 

@@ -16,7 +16,9 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestUserRepository_GetByUserID_正常系_レコードあり(t *testing.T) { //nolint:asciicheck
+func TestUserRepository_GetByUserID_正常系_レコードあり(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
 	assert.NoError(t, (&userID).Parse(domainUserID.String()))
@@ -25,7 +27,7 @@ func TestUserRepository_GetByUserID_正常系_レコードあり(t *testing.T) {
 		ID:   domainUserID,
 		Name: "",
 	}
-	db, mock, _ := mockgateway.NewDBMock()
+	db, mock, _ := mockgateway.NewDBMock() //nolint:varnamelen // テストコードのため許容する
 
 	rows := sqlmock.NewRows([]string{"id", "name"}).
 		AddRow(userID, "")
@@ -56,13 +58,15 @@ func TestUserRepository_GetByUserID_正常系_レコードあり(t *testing.T) {
 	}))
 }
 
-func TestUserRepository_GetByUserID_異常系_レコードなし(t *testing.T) { //nolint:asciicheck
+func TestUserRepository_GetByUserID_異常系_レコードなし(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	domainUserID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
 	var userID value.UUID[inframodel.User]
 	assert.NoError(t, (&userID).Parse(domainUserID.String()))
 
 	var expected *model.User
-	db, mock, _ := mockgateway.NewDBMock()
+	db, mock, _ := mockgateway.NewDBMock() //nolint:varnamelen // テストコードのため許容する
 
 	rows := sqlmock.NewRows([]string{"id", "name"})
 
@@ -94,7 +98,9 @@ func TestUserRepository_GetByUserID_異常系_レコードなし(t *testing.T) {
 
 // User.BeforeCreateでIDが強制挿入されるため、IDまわりの確認はしない
 // User.BeforeCreateをスタブ化すれば回避できるが、そこまでメリットがなさそうなのでやらない
-func TestUserRepository_Create_正常系(t *testing.T) { //nolint:asciicheck
+func TestUserRepository_Create_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	createUser := &repository.CreateUser{
 		Name: "name",
 	}

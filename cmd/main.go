@@ -10,8 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// main関数はunused対象外とする
-func main() { //nolint:unused
+func main() { //nolint:unused // main関数はunused対象外とする
 	container := app.BuildContainer()
 
 	server := gin.Default()
@@ -28,6 +27,5 @@ func main() { //nolint:unused
 		panic(err)
 	}
 
-	// panicが出るのでエラーチェックしない
-	server.Run(":8080") //nolint:errcheck
+	server.Run(":8080") //nolint:errcheck // panicが出るのでエラーチェックしない
 }

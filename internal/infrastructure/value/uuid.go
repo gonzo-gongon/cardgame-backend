@@ -27,8 +27,7 @@ func (u *UUID[T]) GormDataType() string {
 	return "binary(16)"
 }
 
-// 引数未使用だがgorm側で呼び出すためそのままにしておく
-func (u *UUID[T]) GormDBDataType(_ *gorm.DB, _ *schema.Field) string { //nolint:revive
+func (u *UUID[T]) GormDBDataType(_ *gorm.DB, _ *schema.Field) string { //nolint:revive // 引数未使用だがgorm側で呼び出すためそのままにしておく
 	return "binary"
 }
 

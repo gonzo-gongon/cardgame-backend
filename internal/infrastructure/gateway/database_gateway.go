@@ -43,7 +43,7 @@ func (g *DatabaseGatewayImpl) createDSN() string {
 
 func (g *DatabaseGatewayImpl) Connect() (*gorm.DB, error) {
 	dsn := g.createDSN()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	conn, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		return nil, &DatabaseConnectionError{
@@ -51,10 +51,10 @@ func (g *DatabaseGatewayImpl) Connect() (*gorm.DB, error) {
 		}
 	}
 
-	return db, nil
+	return conn, nil
 }
 
-//nolint:ireturn
+//nolint:ireturn // for dependency injection
 func NewDatabaseGateway(
 	config *configs.Config,
 ) (DatabaseGateway, error) {

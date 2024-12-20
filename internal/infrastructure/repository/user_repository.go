@@ -76,7 +76,7 @@ func (r *UserRepositoryImpl) Create(createUser *CreateUser) (*model.User, error)
 	return &ret, nil
 }
 
-//nolint:ireturn
+//nolint:ireturn // DIのためのコードなので許容する
 func NewUserRepository(
 	databaseGateway gateway.DatabaseGateway,
 ) (UserRepository, error) {

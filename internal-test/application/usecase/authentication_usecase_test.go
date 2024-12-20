@@ -15,7 +15,9 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestAuthenticationUsecase_SignUp_正常系(t *testing.T) { //nolint:asciicheck
+func TestAuthenticationUsecase_SignUp_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	const token = "thisistoken"
 
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
@@ -64,7 +66,9 @@ func TestAuthenticationUsecase_SignUp_正常系(t *testing.T) { //nolint:asciich
 	}))
 }
 
-func TestAuthenticationUsecase_Refresh_正常系(t *testing.T) { //nolint:asciicheck
+func TestAuthenticationUsecase_Refresh_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	const token = "thisistoken"
 
 	const newToken = "thisisnewtoken"
@@ -81,7 +85,7 @@ func TestAuthenticationUsecase_Refresh_正常系(t *testing.T) { //nolint:asciic
 
 		return c
 	}))
-	//nolint:varnamelen
+	//nolint:varnamelen // テストコードのため許容する
 	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.AuthenticationRepository {
 		r := mockrepository.NewMockAuthenticationRepository(c)
 		r.EXPECT().Generate(userID).Return(newToken, nil)
@@ -112,7 +116,9 @@ func TestAuthenticationUsecase_Refresh_正常系(t *testing.T) { //nolint:asciic
 	}))
 }
 
-func TestAuthenticationUsecase_Refresh_異常系_トークンが最新ではない(t *testing.T) { //nolint:asciicheck
+func TestAuthenticationUsecase_Refresh_異常系_トークンが最新ではない(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	const token = "thisistoken"
 
 	const newToken = "thisisnewtoken"
@@ -128,7 +134,7 @@ func TestAuthenticationUsecase_Refresh_異常系_トークンが最新ではな�
 
 		return c
 	}))
-	//nolint:varnamelen
+	//nolint:varnamelen // this is testcode
 	assert.NoError(t, container.Provide(func(c *gomock.Controller) repository.AuthenticationRepository {
 		r := mockrepository.NewMockAuthenticationRepository(c)
 		r.EXPECT().Generate(gomock.Any()).Times(0)
@@ -159,7 +165,9 @@ func TestAuthenticationUsecase_Refresh_異常系_トークンが最新ではな�
 	}))
 }
 
-func TestAuthenticationUsecase_GetUser_正常系(t *testing.T) { //nolint:asciicheck
+func TestAuthenticationUsecase_GetUser_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	const token = "thisistoken"
 
 	userID := model.UUID[model.User]("0193a685-4c73-7119-b5fb-ee3eb12f115a")
@@ -200,7 +208,9 @@ func TestAuthenticationUsecase_GetUser_正常系(t *testing.T) { //nolint:asciic
 	}))
 }
 
-func TestAuthenticationUsecase_GetUser_異常系_該当ユーザーなし(t *testing.T) { //nolint:asciicheck
+func TestAuthenticationUsecase_GetUser_異常系_該当ユーザーなし(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
+	t.Parallel()
+
 	const token = "thisistoken"
 
 	var expected *model.User
