@@ -40,11 +40,11 @@ func (u *UUID[T]) Scan(value any) error {
 	parseByte, err := uuid.FromBytes(bytes)
 	*u = UUID[T](parseByte)
 
-	return err
+	return err //nolint:wrapcheck // gormで使うだけなので許容する
 }
 
 func (u UUID[T]) Value() (driver.Value, error) {
-	return uuid.UUID(u).MarshalBinary()
+	return uuid.UUID(u).MarshalBinary() //nolint:wrapcheck // gormで使うだけなので許容する
 }
 
 func (u UUID[T]) String() string {

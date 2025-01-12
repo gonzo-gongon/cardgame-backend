@@ -1,9 +1,18 @@
 package usecase
 
 import (
+	"fmt"
 	"original-card-game-backend/internal/domain/model"
 	"original-card-game-backend/internal/infrastructure/repository"
 )
+
+type UserUsecaseGetUserError struct {
+	cause error
+}
+
+func (e *UserUsecaseGetUserError) Error() string {
+	return fmt.Sprintf("user usecase get user failed: %o", e.cause)
+}
 
 type UserUsecase struct {
 	userRepository repository.UserRepository
@@ -12,7 +21,9 @@ type UserUsecase struct {
 func (u *UserUsecase) GetUser(userID string) (*model.User, error) {
 	user, err := u.userRepository.GetByUserID(userID)
 	if err != nil {
-		return nil, err
+		return nil, &UserUsecaseGetUserError{
+			cause: err,
+		}
 	}
 
 	return user, nil

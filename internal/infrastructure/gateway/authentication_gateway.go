@@ -23,6 +23,14 @@ func (e *InvalidTokenError) Error() string {
 	return "token is not valid"
 }
 
+type ParsingTokenError struct {
+	cause error
+}
+
+func (e *ParsingTokenError) Error() string {
+	return fmt.Sprintf("parsing token failed: %o", e.cause)
+}
+
 type AuthenticationConfig struct {
 	secret []byte
 }
@@ -61,7 +69,13 @@ func (g *AuthenticationGatewayImpl) parseToken(
 		},
 	)
 
-	return token, err
+	if err != nil {
+		return nil, &ParsingTokenError{
+			cause: err,
+		}
+	}
+
+	return token, nil
 }
 
 func (g *AuthenticationGatewayImpl) verify(tokenString string) (*UserClaims, error) {

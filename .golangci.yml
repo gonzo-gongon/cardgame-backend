@@ -2,10 +2,15 @@ linters:
   # よい設定がわかるまでenable-allにしておく
   enable-all: true
   disable:
-    - wrapcheck
+    - gci
+    - gofumpt
     - wsl
     - mnd
     - exhaustruct
+    - tagalign
+    - testifylint
+    - err113
+    - wrapcheck
 
 linters-settings:
   godot:

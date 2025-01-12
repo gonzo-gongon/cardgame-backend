@@ -1,8 +1,6 @@
 package usecase_test
 
 import (
-	"errors"
-	"fmt"
 	mockrepository "original-card-game-backend/internal-test/infrastructure/repository"
 	"original-card-game-backend/internal/application/usecase"
 	"original-card-game-backend/internal/domain/model"
@@ -14,6 +12,18 @@ import (
 	"go.uber.org/dig"
 	"go.uber.org/mock/gomock"
 )
+
+type NotLatestTokenError struct{}
+
+func (e *NotLatestTokenError) Error() string {
+	return "this is not the latest token"
+}
+
+type TokenNotFoundError struct{}
+
+func (e *TokenNotFoundError) Error() string {
+	return "token not found"
+}
 
 func TestAuthenticationUsecase_SignUp_正常系(t *testing.T) { //nolint:asciicheck // テストメソッドのため許容する
 	t.Parallel()
@@ -160,7 +170,7 @@ func TestAuthenticationUsecase_Refresh_異常系_トークンが最新ではな�
 
 	assert.NoError(t, container.Invoke(func(u *usecase.AuthenticationUsecase) {
 		actual, actualError := u.Refresh(token)
-		assert.Error(t, actualError, fmt.Errorf("this is not the latest token"))
+		assert.Error(t, actualError, NotLatestTokenError{})
 		assert.Equal(t, "", actual)
 	}))
 }
@@ -215,7 +225,7 @@ func TestAuthenticationUsecase_GetUser_異常系_該当ユーザーなし(t *tes
 
 	var expected *model.User
 
-	expectedError := errors.New("token not found")
+	expectedError := &TokenNotFoundError{}
 
 	container := dig.New()
 	assert.NoError(t, container.Provide(func() *gomock.Controller {
