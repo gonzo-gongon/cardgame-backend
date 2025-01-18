@@ -27,5 +27,16 @@ func main() { //nolint:unused // main関数はunused対象外とする
 		panic(err)
 	}
 
+	if err := container.Invoke(
+		func(
+			c *controller.GraphQLController,
+		) {
+			server.GET("/", c.GraphQLPlayGround)
+			server.POST("/query", c.GraphQL)
+		},
+	); err != nil {
+		panic(err)
+	}
+
 	server.Run(":8080") //nolint:errcheck // panicが出るのでエラーチェックしない
 }

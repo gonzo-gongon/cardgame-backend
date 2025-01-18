@@ -6,6 +6,8 @@ import (
 	"original-card-game-backend/internal/infrastructure/gateway"
 	"original-card-game-backend/internal/infrastructure/repository"
 	"original-card-game-backend/internal/presentation/controller"
+	"original-card-game-backend/internal/presentation/graphql"
+	graphqlgen "original-card-game-backend/internal/presentation/graphql/generated"
 	"original-card-game-backend/internal/presentation/middleware"
 	"original-card-game-backend/internal/presentation/presenter"
 
@@ -17,6 +19,13 @@ func BuildContainer() *dig.Container { //nolint:cyclop // DIのためのコー�
 
 	// Config
 	if err := container.Provide(configs.NewConfigs); err != nil {
+		panic(err)
+	}
+
+	// GraphQL
+	if err := container.Provide(func() graphqlgen.ResolverRoot {
+		return &graphql.Resolver{}
+	}); err != nil {
 		panic(err)
 	}
 
@@ -53,6 +62,9 @@ func BuildContainer() *dig.Container { //nolint:cyclop // DIのためのコー�
 
 	// Controller
 	if err := container.Provide(controller.NewAuthenticationController); err != nil {
+		panic(err)
+	}
+	if err := container.Provide(controller.NewGraphQLController); err != nil {
 		panic(err)
 	}
 
