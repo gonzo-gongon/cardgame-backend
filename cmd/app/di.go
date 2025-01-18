@@ -7,7 +7,6 @@ import (
 	"original-card-game-backend/internal/infrastructure/repository"
 	"original-card-game-backend/internal/presentation/controller"
 	"original-card-game-backend/internal/presentation/graphql"
-	graphqlgen "original-card-game-backend/internal/presentation/graphql/generated"
 	"original-card-game-backend/internal/presentation/middleware"
 	"original-card-game-backend/internal/presentation/presenter"
 
@@ -23,9 +22,7 @@ func BuildContainer() *dig.Container { //nolint:cyclop // DIのためのコー�
 	}
 
 	// GraphQL
-	if err := container.Provide(func() graphqlgen.ResolverRoot {
-		return &graphql.Resolver{}
-	}); err != nil {
+	if err := container.Provide(graphql.NewResolver); err != nil {
 		panic(err)
 	}
 
@@ -51,12 +48,20 @@ func BuildContainer() *dig.Container { //nolint:cyclop // DIのためのコー�
 		panic(err)
 	}
 
+	if err := container.Provide(repository.NewCardRepository); err != nil {
+		panic(err)
+	}
+
 	// Usecase
 	if err := container.Provide(usecase.NewAuthenticationUsecase); err != nil {
 		panic(err)
 	}
 
 	if err := container.Provide(usecase.NewUserUsecase); err != nil {
+		panic(err)
+	}
+
+	if err := container.Provide(usecase.NewCardUsecase); err != nil {
 		panic(err)
 	}
 

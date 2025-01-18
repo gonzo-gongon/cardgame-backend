@@ -65,3 +65,23 @@ func (u *UUID[T]) Parse(str string) error {
 func UUIDToDomain[T, U any](u UUID[T]) model.UUID[U] {
 	return model.UUID[U](u.String())
 }
+
+func UUIDFromDomain[T, U any](u model.UUID[T]) UUID[U] {
+	p := &UUID[U]{}
+
+	if err := p.Parse(u.String()); err != nil {
+		panic(err)
+	}
+
+	return *p
+}
+
+func UUIDsFromDomain[T, U any](u []model.UUID[T]) []UUID[U] {
+	r := make([]UUID[U], len(u))
+
+	for i, v := range u {
+		r[i] = UUIDFromDomain[T, U](v)
+	}
+
+	return r
+}

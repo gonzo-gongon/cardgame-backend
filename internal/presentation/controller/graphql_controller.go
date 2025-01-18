@@ -1,7 +1,8 @@
 package controller
 
 import (
-	graphql "original-card-game-backend/internal/presentation/graphql/generated"
+	"original-card-game-backend/internal/presentation/graphql"
+	graphqlgen "original-card-game-backend/internal/presentation/graphql/generated"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
@@ -11,13 +12,13 @@ import (
 )
 
 type GraphQLController struct {
-	resolver graphql.ResolverRoot
+	resolver *graphql.Resolver
 }
 
 func (c *GraphQLController) GraphQL(context *gin.Context) {
 	h := handler.New(
-		graphql.NewExecutableSchema(
-			graphql.Config{
+		graphqlgen.NewExecutableSchema(
+			graphqlgen.Config{
 				Resolvers: c.resolver,
 			},
 		),
@@ -41,7 +42,7 @@ func (c *GraphQLController) GraphQLPlayGround(context *gin.Context) {
 }
 
 func NewGraphQLController(
-	resolver graphql.ResolverRoot,
+	resolver *graphql.Resolver,
 ) (*GraphQLController, error) {
 	return &GraphQLController{
 		resolver: resolver,

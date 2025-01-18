@@ -7,6 +7,7 @@ package graphql
 import (
 	"context"
 	"fmt"
+	"original-card-game-backend/internal/domain/model"
 	"original-card-game-backend/internal/presentation/graphql/generated"
 )
 
@@ -17,16 +18,21 @@ func (r *mutationResolver) CreateCard(ctx context.Context, input generated.Creat
 
 // Cards is the resolver for the cards field.
 func (r *queryResolver) Cards(ctx context.Context, ids []string) ([]*generated.Card, error) {
-	return []*generated.Card{
-		{
-			ID:   "1",
-			Name: "ラーのよく神龍",
-			Text: "なんか強い",
-		},
-		{
-			ID:   "2",
-			Name: "ラーメンのよく神龍",
-			Text: "なんかおいしい",
-		},
-	}, nil
+	cards, err := r.cardUsecase.GetCards(model.UUIDsFromString[model.Card](ids))
+
+	if err != nil {
+		panic(err)
+	}
+
+	ret := make([]*generated.Card, len(cards))
+
+	for i, v := range cards {
+		ret[i] = &generated.Card{
+			ID:   string(v.ID),
+			Name: v.Name,
+			Text: v.Text,
+		}
+	}
+
+	return ret, nil
 }
