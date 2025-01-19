@@ -2,6 +2,7 @@ package controller
 
 import (
 	"original-card-game-backend/internal/presentation/graphql"
+	"original-card-game-backend/internal/presentation/graphql/directive"
 	graphqlgen "original-card-game-backend/internal/presentation/graphql/generated"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -15,11 +16,14 @@ type GraphQLController struct {
 	resolver *graphql.Resolver
 }
 
-func (c *GraphQLController) GraphQL(context *gin.Context) {
+func (c *GraphQLController) GraphQL(context *gin.Context, ad *directive.AuthDirective) {
 	h := handler.New(
 		graphqlgen.NewExecutableSchema(
 			graphqlgen.Config{
 				Resolvers: c.resolver,
+				Directives: graphqlgen.DirectiveRoot{
+					Auth: ad.Auth,
+				},
 			},
 		),
 	)

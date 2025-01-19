@@ -14,5 +14,5 @@ input CreateCardInput {
 }
 
 extend type Mutation {
-    createCard(input: CreateCardInput!): Card!
+    createCard(input: CreateCardInput!): Card! @auth
 }

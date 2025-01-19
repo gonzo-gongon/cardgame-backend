@@ -79,3 +79,29 @@ func NewTokenRefreshMiddleware(
 		authenticationPresenter: authenticationPresenter,
 	}, nil
 }
+
+type AuthenticationMiddleware struct {
+	authenticationPresenter *presenter.AuthenticationPresenter
+}
+
+func (m *AuthenticationMiddleware) Handler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token, err := getTokenFromAuthorizationHeader(ctx)
+		if err == nil {
+			setToken(ctx, token)
+			ctx.Next()
+
+			return
+		}
+
+		ctx.Next()
+	}
+}
+
+func NewAuthenticationMiddleware(
+	authenticationPresenter *presenter.AuthenticationPresenter,
+) (*AuthenticationMiddleware, error) {
+	return &AuthenticationMiddleware{
+		authenticationPresenter: authenticationPresenter,
+	}, nil
+}

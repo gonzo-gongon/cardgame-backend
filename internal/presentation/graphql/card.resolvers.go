@@ -6,14 +6,36 @@ package graphql
 
 import (
 	"context"
-	"fmt"
 	"original-card-game-backend/internal/domain/model"
+	"original-card-game-backend/internal/presentation/graphql/directive"
 	"original-card-game-backend/internal/presentation/graphql/generated"
 )
 
 // CreateCard is the resolver for the createCard field.
 func (r *mutationResolver) CreateCard(ctx context.Context, input generated.CreateCardInput) (*generated.Card, error) {
-	panic(fmt.Errorf("not implemented: CreateCard - createCard"))
+	user, err := directive.GetUserFromContext(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	ret, err := r.cardUsecase.CreateCard(
+		model.CreateCard{
+			Name: input.Name,
+			Text: input.Text,
+		},
+		user,
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &generated.Card{
+		ID:   ret.ID.String(),
+		Name: ret.Name,
+		Text: ret.Text,
+	}, nil
 }
 
 // Cards is the resolver for the cards field.

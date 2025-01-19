@@ -5,3 +5,8 @@ type Card struct {
 	Name string
 	Text string
 }
+
+type CreateCard struct {
+	Name string
+	Text string
+}

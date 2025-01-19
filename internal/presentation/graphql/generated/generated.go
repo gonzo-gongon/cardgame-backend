@@ -42,6 +42,7 @@ type ResolverRoot interface {
 }
 
 type DirectiveRoot struct {
+	Auth func(ctx context.Context, obj any, next graphql.Resolver) (res any, err error)
 }
 
 type ComplexityRoot struct {
@@ -253,8 +254,10 @@ input CreateCardInput {
 }
 
 extend type Mutation {
-    createCard(input: CreateCardInput!): Card!
+    createCard(input: CreateCardInput!): Card! @auth
 }`, BuiltIn: false},
+	{Name: "../../../../graph/directive.graphql", Input: `directive @auth on FIELD_DEFINITION | OBJECT
+`, BuiltIn: false},
 	{Name: "../../../../graph/scalar.graphql", Input: `scalar UUID`, BuiltIn: false},
 	{Name: "../../../../graph/schema.graphql", Input: `schema {
     query: Query
@@ -538,8 +541,30 @@ func (ec *executionContext) _Mutation_createCard(ctx context.Context, field grap
 		}
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateCard(rctx, fc.Args["input"].(CreateCardInput))
+		directive0 := func(rctx context.Context) (any, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateCard(rctx, fc.Args["input"].(CreateCardInput))
+		}
+
+		directive1 := func(ctx context.Context) (any, error) {
+			if ec.directives.Auth == nil {
+				var zeroVal *Card
+				return zeroVal, errors.New("directive auth is not implemented")
+			}
+			return ec.directives.Auth(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*Card); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *original-card-game-backend/internal/presentation/graphql/generated.Card`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
