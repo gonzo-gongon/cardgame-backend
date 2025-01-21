@@ -29,6 +29,17 @@ func (u *UserUsecase) GetUser(userID string) (*model.User, error) {
 	return user, nil
 }
 
+func (u *UserUsecase) GetUsersByIDs(userIDs []model.UUID[model.User]) ([]model.User, error) {
+	users, err := u.userRepository.GetUsersByUserIDs(userIDs)
+	if err != nil {
+		return nil, &UserUsecaseGetUserError{
+			cause: err,
+		}
+	}
+
+	return users, nil
+}
+
 func NewUserUsecase(
 	userRepository repository.UserRepository,
 ) (*UserUsecase, error) {

@@ -15,6 +15,7 @@ func (e *UserNotFoundError) Error() string {
 
 type UserRepository interface {
 	GetByUserID(userID string) (*model.User, error)
+	GetUsersByUserIDs(userIDs []model.UUID[model.User]) ([]model.User, error)
 	Create(createUser *CreateUser) (*model.User, error)
 }
 
@@ -56,6 +57,37 @@ func (r *UserRepositoryImpl) GetByUserID(userID string) (*model.User, error) {
 	entity := user.Domain()
 
 	return &entity, nil
+}
+
+func (r *UserRepositoryImpl) GetUsersByUserIDs(userIDs []model.UUID[model.User]) ([]model.User, error) {
+	conn, err := r.databaseGateway.Connect()
+	if err != nil {
+		return nil, err
+	}
+
+	parsedUserIDs := make([]value.UUID[inframodel.User], len(userIDs))
+
+	for i, v := range userIDs {
+		err := parsedUserIDs[i].Parse(v.String())
+
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	var users []inframodel.User
+
+	if result := conn.Where("id IN ?", parsedUserIDs).Find(&users); result.Error != nil {
+		return nil, result.Error
+	}
+
+	ret := make([]model.User, len(users))
+
+	for i, v := range users {
+		ret[i] = v.Domain()
+	}
+
+	return ret, nil
 }
 
 func (r *UserRepositoryImpl) Create(createUser *CreateUser) (*model.User, error) {

@@ -1,0 +1,9 @@
+type User {
+    id: ID!
+    name: String!
+}
+
+type Self {
+    id: ID!
+    name: String!
+}

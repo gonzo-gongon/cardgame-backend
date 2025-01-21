@@ -8,6 +8,7 @@ import (
 	"original-card-game-backend/internal/presentation/controller"
 	"original-card-game-backend/internal/presentation/graphql"
 	"original-card-game-backend/internal/presentation/graphql/directive"
+	"original-card-game-backend/internal/presentation/graphql/loader"
 	"original-card-game-backend/internal/presentation/middleware"
 	"original-card-game-backend/internal/presentation/presenter"
 
@@ -23,6 +24,14 @@ func BuildContainer() *dig.Container { //nolint:cyclop // DIのためのコー�
 	}
 
 	// GraphQL
+	if err := container.Provide(loader.NewLoaders); err != nil {
+		panic(err)
+	}
+
+	if err := container.Provide(loader.NewUserLoader); err != nil {
+		panic(err)
+	}
+
 	if err := container.Provide(graphql.NewResolver); err != nil {
 		panic(err)
 	}

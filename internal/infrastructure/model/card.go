@@ -26,10 +26,26 @@ func (d *Card) BeforeCreate(db *gorm.DB) (err error) { //nolint:revive,nonamedre
 }
 
 func (d *Card) Domain() model.Card {
+	//TODO: エラー時の処理　もしくは nullにならないように設定
+
+	var createdBy value.UUID[User]
+
+	if d.CreatedBy != nil {
+		createdBy = *d.CreatedBy
+	}
+
+	var updatedBy value.UUID[User]
+
+	if d.UpdatedBy != nil {
+		updatedBy = *d.UpdatedBy
+	}
+
 	return model.Card{
-		ID:   value.UUIDToDomain[Card, model.Card](d.ID),
-		Name: d.Name,
-		Text: d.Text,
+		ID:        value.UUIDToDomain[Card, model.Card](d.ID),
+		Name:      d.Name,
+		Text:      d.Text,
+		CreatedBy: model.UUID[model.User](createdBy.String()),
+		UpdatedBy: model.UUID[model.User](updatedBy.String()),
 	}
 }
 
